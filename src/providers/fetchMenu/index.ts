@@ -50,45 +50,51 @@ function parseCategoryListData(
 function parseProductListData(
   data: fetchMenuResponse["product_list_json"],
   combineData: fetchMenuResponse["combine_list_json"]
-) {
+): Dictionary<Product> {
   const { schema, data: productData } = data;
-  const products = Object.values(productData).reduce((obj, product) => {
-    let temperature: string[] = [];
+  return Object.values(productData).reduce<Dictionary<Product>>(
+    (obj, product) => {
+      const id = product[schema.product_id] as number;
+      const sort = product[schema.sort] as number;
+      const name = product[schema.name] as string;
+      const price = product[schema.price] as number;
 
-    const combineListId = product[schema.combine_list] as number;
-    const {
-      schema: combineSchema,
-      common_schema: commonSchema,
-      data: combineListData,
-    } = combineData;
-    const productCombineData = combineListData[combineListId];
+      let temperature: string[] = [];
 
-    if (productCombineData) {
-      const productCommonListData = productCombineData[
-        combineSchema.common_list
-      ] as unknown[];
-      const temperatureListData = productCommonListData[1] as unknown[][];
+      const combineListId = product[schema.combine_list] as number;
+      const {
+        schema: combineSchema,
+        common_schema: commonSchema,
+        data: combineListData,
+      } = combineData;
+      const productCombineData = combineListData[combineListId];
 
-      if (temperatureListData) {
-        temperature = temperatureListData.map(
-          (temperatureData) => temperatureData[commonSchema.name]
-        ) as string[];
+      if (productCombineData) {
+        const productCommonListData = productCombineData[
+          combineSchema.common_list
+        ] as unknown[];
+        const temperatureListData = productCommonListData[1] as unknown[][];
+
+        if (temperatureListData) {
+          temperature = temperatureListData.map(
+            (temperatureData) => temperatureData[commonSchema.name]
+          ) as string[];
+        }
       }
-    }
 
-    return {
-      ...obj,
-      [product[schema.product_id] as number]: {
-        id: product[schema.product_id],
-        sort: product[schema.sort],
-        name: product[schema.name],
-        price: product[schema.price],
-        temperature,
-      } as Product,
-    };
-  }, {});
-
-  return products;
+      return {
+        ...obj,
+        [id]: {
+          id,
+          sort,
+          name,
+          price,
+          temperature,
+        },
+      };
+    },
+    {}
+  );
 }
 
 function fetchMenu(): Promise<Menu> {
