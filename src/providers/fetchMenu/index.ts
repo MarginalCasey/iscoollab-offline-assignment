@@ -1,5 +1,5 @@
 import type { Dictionary } from "@/types";
-import type { Category, Menu, Product } from "./types";
+import type { Adjust, Category, Menu, Option, Product } from "./types";
 
 interface JsonType<SchemaFields extends string> {
   schema: {
@@ -13,13 +13,23 @@ interface JsonType<SchemaFields extends string> {
 interface fetchMenuResponse {
   category_list_json: JsonType<"product_id" | "sort" | "name" | "product_list">;
   product_list_json: JsonType<
-    "product_id" | "sort" | "name" | "price" | "adjust_list" | "combine_list"
+    | "product_id"
+    | "sort"
+    | "name"
+    | "price"
+    | "adjust_list"
+    | "option_list"
+    | "combine_list"
   >;
   combine_list_json: {
     common_schema: {
       [field_name in "name" | "price"]: number;
     };
   } & JsonType<"common_list">;
+  adjust_list_json: JsonType<"product_id" | "sort" | "name" | "option_list">;
+  option_list_json: JsonType<
+    "product_id" | "sort" | "name" | "price" | "adjust_id"
+  >;
 }
 
 function parseCategoryListData(
@@ -58,6 +68,7 @@ function parseProductListData(
       const sort = product[schema.sort] as number;
       const name = product[schema.name] as string;
       const price = product[schema.price] as number;
+      const adjustList = product[schema.adjust_list] as number[];
 
       let temperature: string[] = [];
 
@@ -89,6 +100,7 @@ function parseProductListData(
           sort,
           name,
           price,
+          adjustList,
           temperature,
         },
       };
@@ -97,18 +109,64 @@ function parseProductListData(
   );
 }
 
+function parseAdjustListData(
+  data: fetchMenuResponse["adjust_list_json"]
+): Dictionary<Adjust> {
+  const { schema, data: adjustData } = data;
+  return Object.values(adjustData).reduce<Dictionary<Adjust>>((obj, adjust) => {
+    const id = adjust[schema.product_id] as number;
+    const sort = adjust[schema.sort] as number;
+    const name = adjust[schema.name] as string;
+    const optionList = adjust[schema.option_list] as number[];
+
+    return {
+      ...obj,
+      [id]: {
+        id,
+        sort,
+        name,
+        optionList,
+      },
+    };
+  }, {});
+}
+
+function parseOptionListData(
+  data: fetchMenuResponse["option_list_json"]
+): Dictionary<Option> {
+  const { schema, data: adjustData } = data;
+  return Object.values(adjustData).reduce<Dictionary<Option>>((obj, option) => {
+    const id = option[schema.product_id] as number;
+    const sort = option[schema.sort] as number;
+    const name = option[schema.name] as string;
+    const price = option[schema.price] as number;
+    const adjustId = option[schema.adjust_id] as number;
+
+    return {
+      ...obj,
+      [id]: {
+        id,
+        sort,
+        name,
+        price,
+        adjustId,
+      },
+    };
+  }, {});
+}
+
 function fetchMenu(): Promise<Menu> {
   return fetch("/menu.json")
     .then<fetchMenuResponse>((response) => response.json())
-    .then<Menu>((data) => {
-      return {
-        categories: parseCategoryListData(data.category_list_json),
-        products: parseProductListData(
-          data.product_list_json,
-          data.combine_list_json
-        ),
-      };
-    });
+    .then<Menu>((data) => ({
+      categories: parseCategoryListData(data.category_list_json),
+      products: parseProductListData(
+        data.product_list_json,
+        data.combine_list_json
+      ),
+      adjusts: parseAdjustListData(data.adjust_list_json),
+      options: parseOptionListData(data.option_list_json),
+    }));
 }
 
 export default fetchMenu;

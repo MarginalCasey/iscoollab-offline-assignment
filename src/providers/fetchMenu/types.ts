@@ -10,7 +10,23 @@ export interface Product {
   sort: number;
   name: string;
   price: number;
+  adjustList: number[];
   temperature: string[];
+}
+
+export interface Adjust {
+  id: number;
+  sort: number;
+  name: string;
+  optionList: number[];
+}
+
+export interface Option {
+  id: number;
+  sort: number;
+  name: string;
+  price: number;
+  adjustId: number;
 }
 
 export interface Menu {
@@ -19,5 +35,11 @@ export interface Menu {
   };
   products: {
     [id: number]: Product;
+  };
+  adjusts: {
+    [id: number]: Adjust;
+  };
+  options: {
+    [id: number]: Option;
   };
 }
