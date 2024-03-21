@@ -12,6 +12,9 @@ export interface Product {
   price: number;
   adjustList: number[];
   temperature: string[];
+  availableOptions: {
+    [optionId: number]: true;
+  };
 }
 
 export interface Adjust {

@@ -25,7 +25,7 @@ interface fetchMenuResponse {
     common_schema: {
       [field_name in "name" | "price"]: number;
     };
-  } & JsonType<"common_list">;
+  } & JsonType<"common_list" | "edge_list">;
   adjust_list_json: JsonType<"product_id" | "sort" | "name" | "option_list">;
   option_list_json: JsonType<
     "product_id" | "sort" | "name" | "price" | "adjust_id"
@@ -71,6 +71,7 @@ function parseProductListData(
       const adjustList = product[schema.adjust_list] as number[];
 
       let temperature: string[] = [];
+      let availableOptions = {};
 
       const combineListId = product[schema.combine_list] as number;
       const {
@@ -91,6 +92,17 @@ function parseProductListData(
             (temperatureData) => temperatureData[commonSchema.name]
           ) as string[];
         }
+
+        const productEdgeListData = productCombineData[
+          combineSchema.edge_list
+        ] as unknown[];
+        availableOptions = Object.keys(productEdgeListData).reduce(
+          (obj, key) => ({
+            ...obj,
+            [key]: true,
+          }),
+          {}
+        );
       }
 
       return {
@@ -102,6 +114,7 @@ function parseProductListData(
           price,
           adjustList,
           temperature,
+          availableOptions,
         },
       };
     },
