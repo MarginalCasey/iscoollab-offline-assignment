@@ -16,28 +16,30 @@ function Menu() {
   });
   if (isFetching) return null;
 
-  const { categoryList, products } = data as Menu;
 
+  const { categories, products } = data as Menu;
   return (
     <Container>
-      {categoryList.map((category) => (
-        <Category key={category.id}>
-          <Title>{category.name}</Title>
-          {category.productList
-            .sort((a, b) => products[a].sort - products[b].sort)
-            .map((productId) => {
-              const product = products[productId];
+      {Object.values(categories)
+        .sort((a, b) => a.sort - b.sort)
+        .map((category) => (
+          <Category key={category.id}>
+            <Title>{category.name}</Title>
+            {category.productList
+              .sort((a, b) => products[a].sort - products[b].sort)
+              .map((productId) => {
+                const product = products[productId];
 
-              return (
-                <Product key={productId}>
-                  <ProductTitle>{product.name}</ProductTitle>
-                  <div>{product.price}</div>
-                  <div>{product.temperature.join(", ")}</div>
-                </Product>
-              );
-            })}
-        </Category>
-      ))}
+                return (
+                  <Product key={productId} onClick={openOrderDialog(productId)}>
+                    <ProductTitle>{product.name}</ProductTitle>
+                    <div>{product.price}</div>
+                    <div>{product.temperature.join(", ")}</div>
+                  </Product>
+                );
+              })}
+          </Category>
+        ))}
     </Container>
   );
 }

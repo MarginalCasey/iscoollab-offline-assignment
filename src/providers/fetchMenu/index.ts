@@ -1,3 +1,4 @@
+import type { Dictionary } from "@/types";
 import type { Category, Menu, Product } from "./types";
 
 interface JsonType<SchemaFields extends string> {
@@ -21,23 +22,29 @@ interface fetchMenuResponse {
   } & JsonType<"common_list">;
 }
 
-function parseCategoryListData(data: fetchMenuResponse["category_list_json"]) {
+function parseCategoryListData(
+  data: fetchMenuResponse["category_list_json"]
+): Dictionary<Category> {
   const { schema, data: categoryData } = data;
-  const categoryList = Object.values(categoryData)
-    .sort((a, b) => {
-      const orderA = a[schema.sort] as number;
-      const orderB = b[schema.sort] as number;
-      return orderA - orderB;
-    })
-    .map((category) => {
-      return {
-        id: category[schema.product_id],
-        name: category[schema.name],
-        productList: category[schema.product_list],
-      } as Category;
-    });
+  return Object.values(categoryData).reduce<Dictionary<Category>>(
+    (obj, category) => {
+      const id = category[schema.product_id] as number;
+      const sort = category[schema.sort] as number;
+      const name = category[schema.name] as string;
+      const productList = category[schema.product_list] as number[];
 
-  return categoryList;
+      return {
+        ...obj,
+        [id]: {
+          id,
+          sort,
+          name,
+          productList,
+        },
+      };
+    },
+    {}
+  );
 }
 
 function parseProductListData(
@@ -89,7 +96,7 @@ function fetchMenu(): Promise<Menu> {
     .then<fetchMenuResponse>((response) => response.json())
     .then<Menu>((data) => {
       return {
-        categoryList: parseCategoryListData(data.category_list_json),
+        categories: parseCategoryListData(data.category_list_json),
         products: parseProductListData(
           data.product_list_json,
           data.combine_list_json

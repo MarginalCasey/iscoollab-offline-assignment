@@ -1,5 +1,6 @@
 export interface Category {
   id: number;
+  sort: number;
   name: string;
   productList: number[];
 }
@@ -13,7 +14,9 @@ export interface Product {
 }
 
 export interface Menu {
-  categoryList: Category[];
+  categories: {
+    [id: number]: Category;
+  };
   products: {
     [id: number]: Product;
   };
