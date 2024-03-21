@@ -31,6 +31,7 @@ export const Title = styled.div`
 
 export const Product = styled.div`
   padding: 4px 16px;
+  cursor: pointer;
 
   :not(:last-child) {
     border-bottom: 1px solid rgba(68, 68, 68, 0.1);

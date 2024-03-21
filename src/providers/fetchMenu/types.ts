@@ -21,6 +21,10 @@ export interface Adjust {
   id: number;
   sort: number;
   name: string;
+  subType: number;
+  isMandatory: boolean;
+  minLimit: number;
+  maxLimit: number;
   optionList: number[];
 }
 

@@ -26,7 +26,16 @@ interface fetchMenuResponse {
       [field_name in "name" | "price"]: number;
     };
   } & JsonType<"common_list" | "edge_list">;
-  adjust_list_json: JsonType<"product_id" | "sort" | "name" | "option_list">;
+  adjust_list_json: JsonType<
+    | "product_id"
+    | "sort"
+    | "name"
+    | "sub_type"
+    | "is_mandatory"
+    | "min_limit"
+    | "max_limit"
+    | "option_list"
+  >;
   option_list_json: JsonType<
     "product_id" | "sort" | "name" | "price" | "adjust_id"
   >;
@@ -62,6 +71,12 @@ function parseProductListData(
   combineData: fetchMenuResponse["combine_list_json"]
 ): Dictionary<Product> {
   const { schema, data: productData } = data;
+  const {
+    schema: combineSchema,
+    common_schema: commonSchema,
+    data: combineListData,
+  } = combineData;
+
   return Object.values(productData).reduce<Dictionary<Product>>(
     (obj, product) => {
       const id = product[schema.product_id] as number;
@@ -73,20 +88,14 @@ function parseProductListData(
       let temperature: string[] = [];
       let availableOptions = {};
 
-      const combineListId = product[schema.combine_list] as number;
-      const {
-        schema: combineSchema,
-        common_schema: commonSchema,
-        data: combineListData,
-      } = combineData;
-      const productCombineData = combineListData[combineListId];
+      const combineList = product[schema.combine_list] as number[];
+      combineList.forEach((combineListId) => {
+        const productCombineData = combineListData[combineListId];
 
-      if (productCombineData) {
         const productCommonListData = productCombineData[
           combineSchema.common_list
         ] as unknown[];
         const temperatureListData = productCommonListData[1] as unknown[][];
-
         if (temperatureListData) {
           temperature = temperatureListData.map(
             (temperatureData) => temperatureData[commonSchema.name]
@@ -101,9 +110,9 @@ function parseProductListData(
             ...obj,
             [key]: true,
           }),
-          {}
+          availableOptions
         );
-      }
+      });
 
       return {
         ...obj,
@@ -130,6 +139,10 @@ function parseAdjustListData(
     const id = adjust[schema.product_id] as number;
     const sort = adjust[schema.sort] as number;
     const name = adjust[schema.name] as string;
+    const subType = adjust[schema.sub_type] as number;
+    const isMandatory = adjust[schema.is_mandatory] as boolean;
+    const minLimit = adjust[schema.min_limit] as number;
+    const maxLimit = adjust[schema.max_limit] as number;
     const optionList = adjust[schema.option_list] as number[];
 
     return {
@@ -138,6 +151,10 @@ function parseAdjustListData(
         id,
         sort,
         name,
+        subType,
+        isMandatory,
+        minLimit,
+        maxLimit,
         optionList,
       },
     };

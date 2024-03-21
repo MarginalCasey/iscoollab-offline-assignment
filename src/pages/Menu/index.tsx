@@ -1,6 +1,8 @@
 import fetchMenu from "@/providers/fetchMenu";
 import type { Menu } from "@/providers/fetchMenu/types";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import OrderDialog from "./OrderDialog";
 import {
   Category,
   Container,
@@ -14,10 +16,18 @@ function Menu() {
     queryKey: ["menu"],
     queryFn: fetchMenu,
   });
+
+  const [selectedProductId, setSelectedProductId] = useState<number>();
+  const openOrderDialog = (productId: number) => () => {
+    setSelectedProductId(productId);
+  };
+  const closeOrderDialog = () => {
+    setSelectedProductId(undefined);
+  };
+
   if (isFetching) return null;
 
-
-  const { categories, products } = data as Menu;
+  const { categories, products, adjusts, options } = data as Menu;
   return (
     <Container>
       {Object.values(categories)
@@ -40,6 +50,15 @@ function Menu() {
               })}
           </Category>
         ))}
+      {selectedProductId && (
+        <OrderDialog
+          products={products}
+          adjusts={adjusts}
+          options={options}
+          productId={selectedProductId}
+          onClose={closeOrderDialog}
+        />
+      )}
     </Container>
   );
 }
