@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import Layout from "./Layout";
+import Menu from "./pages/Menu";
 
 const queryClient = new QueryClient();
 
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "menu",
-        element: <div>menu</div>,
+        element: <Menu />,
       },
       {
         path: "cart",
@@ -37,7 +38,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />;
+      <RouterProvider router={router} />
     </QueryClientProvider>
   );
 }
