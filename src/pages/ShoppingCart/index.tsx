@@ -76,7 +76,7 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
                     const amount = option.amount;
                     return amount > 1 ? `${name}x${amount}` : name;
                   })
-                  .concat(`$${products[item.id].price}`)
+                  .concat(`$${item.total}`)
                   .concat(`${item.amount}份`)
                   .join(" / ")}
               </ItemDetail>
