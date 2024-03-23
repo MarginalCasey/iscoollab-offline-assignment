@@ -21,6 +21,7 @@ interface OrderDialogProps {
   adjusts: Dictionary<Adjust>; // TODO
   options: Dictionary<Option>; // TODO
   productId: number;
+  currentOrder?: Order;
   onClose: () => void;
   onSubmit: (order: Order) => void;
 }
@@ -30,9 +31,12 @@ function OrderDialog({
   adjusts,
   options,
   productId,
+  currentOrder,
   onClose,
   onSubmit,
 }: OrderDialogProps) {
+  const isEditMode = currentOrder !== undefined;
+
   const product = products[productId];
   const adjustList = product.adjustList
     .sort((a, b) => adjusts[a].sort - adjusts[b].sort)
@@ -60,12 +64,14 @@ function OrderDialog({
       };
     });
 
-  const [order, setOrder] = useState<Order>({
-    id: productId,
-    amount: 1,
-    adjusts: {},
-    total: product.price,
-  });
+  const [order, setOrder] = useState<Order>(
+    currentOrder ?? {
+      id: productId,
+      amount: 1,
+      adjusts: {},
+      total: product.price,
+    }
+  );
 
   const handleSelectOption = (adjustId: number, optionId: number) => {
     return () => {
@@ -206,7 +212,7 @@ function OrderDialog({
             );
           })}
         >
-          加入購物車
+          {isEditMode ? "更新商品" : "加入購物車"}
         </Button>
       </DialogActions>
     </Dialog>

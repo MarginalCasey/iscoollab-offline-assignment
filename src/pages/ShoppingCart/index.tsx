@@ -1,3 +1,5 @@
+import OrderDialog from "@/components/OrderDialog";
+import useOrderDialog from "@/components/OrderDialog/useOrderDialog";
 import fetchMenu from "@/providers/fetchMenu";
 import type { Menu } from "@/providers/fetchMenu/types";
 import type { Cart } from "@/types";
@@ -26,10 +28,18 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
     queryFn: fetchMenu,
   });
 
+  const {
+    selectedProductId,
+    selectedOrder,
+    openOrderDialog,
+    closeOrderDialog,
+    submitOrderDialog,
+  } = useOrderDialog(shoppingCart, setShoppingCart);
+
   if (shoppingCart.length === 0) return <Container>購物車內容為空</Container>;
   if (isFetching) return null;
 
-  const { products, options } = data as Menu;
+  const { products, adjusts, options } = data as Menu;
 
   const handleDeleteCartItem = (index: number) => () => {
     setShoppingCart(
@@ -43,7 +53,7 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
     <Container>
       <Title>購物內容</Title>
       {shoppingCart.map((item, index) => (
-        <Item key={item.id}>
+        <Item key={index}>
           <ItemInfo>
             <ItemName>{products[item.id].name}</ItemName>
             <ItemDetail>
@@ -61,11 +71,22 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
             </ItemDetail>
           </ItemInfo>
           <ItemAction>
-            <Button>編輯</Button>
+            <Button onClick={openOrderDialog(item.id, index)}>編輯</Button>
             <Button onClick={handleDeleteCartItem(index)}>刪除</Button>
           </ItemAction>
         </Item>
       ))}
+      {selectedProductId && (
+        <OrderDialog
+          products={products}
+          adjusts={adjusts}
+          options={options}
+          productId={selectedProductId}
+          currentOrder={selectedOrder}
+          onClose={closeOrderDialog}
+          onSubmit={submitOrderDialog}
+        />
+      )}
     </Container>
   );
 }

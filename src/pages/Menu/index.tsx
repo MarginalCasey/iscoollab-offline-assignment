@@ -29,7 +29,7 @@ function Menu({ shoppingCart, setShoppingCart }: MenuProps) {
     selectedProductId,
     openOrderDialog,
     closeOrderDialog,
-    handleSubmitOrderDialog,
+    submitOrderDialog,
   } = useOrderDialog(shoppingCart, setShoppingCart);
 
   if (isFetching) return null;
@@ -71,7 +71,7 @@ function Menu({ shoppingCart, setShoppingCart }: MenuProps) {
           options={options}
           productId={selectedProductId}
           onClose={closeOrderDialog}
-          onSubmit={handleSubmitOrderDialog}
+          onSubmit={submitOrderDialog}
         />
       )}
     </Container>

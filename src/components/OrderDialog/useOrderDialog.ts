@@ -9,23 +9,33 @@ function useOrderDialog(
   setShoppingCart: Dispatch<SetStateAction<Cart>>
 ) {
   const [selectedProductId, setSelectedProductId] = useState<number>();
-  const openOrderDialog = (productId: number) => () => {
+  const [selectedCartItemIndex, setSelectedCartItemIndex] = useState<number>();
+  const editMode = selectedCartItemIndex !== undefined;
+
+  const openOrderDialog = (productId: number, cartItemIndex?: number) => () => {
     setSelectedProductId(productId);
+    setSelectedCartItemIndex(cartItemIndex);
   };
   const closeOrderDialog = () => {
     setSelectedProductId(undefined);
+    setSelectedCartItemIndex(undefined);
   };
-  const handleSubmitOrderDialog = (order: Order) => {
+  const submitOrderDialog = (order: Order) => {
     setShoppingCart(
       create(shoppingCart, (draft) => {
-        const indexOfIdenticalOrder = shoppingCart.findIndex(
-          (item) => item.id === order.id && isEqual(item.adjusts, order.adjusts)
-        );
-
-        if (indexOfIdenticalOrder === -1) {
-          draft.push(order);
+        if (editMode) {
+          draft[selectedCartItemIndex] = order;
         } else {
-          draft[indexOfIdenticalOrder].amount += order.amount;
+          const indexOfIdenticalOrder = shoppingCart.findIndex(
+            (item) =>
+              item.id === order.id && isEqual(item.adjusts, order.adjusts)
+          );
+
+          if (indexOfIdenticalOrder === -1) {
+            draft.push(order);
+          } else {
+            draft[indexOfIdenticalOrder].amount += order.amount;
+          }
         }
       })
     );
@@ -33,9 +43,10 @@ function useOrderDialog(
 
   return {
     selectedProductId,
+    selectedOrder: editMode ? shoppingCart[selectedCartItemIndex] : undefined,
     openOrderDialog,
     closeOrderDialog,
-    handleSubmitOrderDialog,
+    submitOrderDialog,
   };
 }
 
