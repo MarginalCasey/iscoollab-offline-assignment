@@ -9,6 +9,7 @@ import {
 import "./App.css";
 import Layout from "./Layout";
 import Menu from "./pages/Menu";
+import ShoppingCart from "./pages/ShoppingCart";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +36,12 @@ function App() {
         },
         {
           path: "cart",
-          element: <div>cart</div>,
+          element: (
+            <ShoppingCart
+              shoppingCart={shoppingCart}
+              setShoppingCart={setShoppingCart}
+            />
+          ),
         },
         {
           path: "history",
