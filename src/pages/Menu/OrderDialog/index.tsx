@@ -1,5 +1,5 @@
 import type { Adjust, Option, Product } from "@/providers/fetchMenu/types";
-import type { Dictionary } from "@/types";
+import type { Dictionary, Order } from "@/types";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -16,29 +16,13 @@ import {
   Options,
 } from "./index.style";
 
-interface Order {
-  id: number;
-  amount: number;
-  adjusts: {
-    [id: number]: {
-      id: number;
-      options: {
-        [id: number]: {
-          id: number;
-          amount: number;
-        };
-      };
-    };
-  };
-  total: number;
-}
-
 interface OrderDialogProps {
   products: Dictionary<Product>; // TODO
   adjusts: Dictionary<Adjust>; // TODO
   options: Dictionary<Option>; // TODO
   productId: number;
   onClose: () => void;
+  onSubmit: (order: Order) => void;
 }
 
 function OrderDialog({
@@ -47,6 +31,7 @@ function OrderDialog({
   options,
   productId,
   onClose,
+  onSubmit,
 }: OrderDialogProps) {
   const product = products[productId];
   const adjustList = product.adjustList
@@ -155,6 +140,7 @@ function OrderDialog({
   };
 
   const handleSubmit = () => {
+    onSubmit(order);
     onClose();
   };
 

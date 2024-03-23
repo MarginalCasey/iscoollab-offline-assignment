@@ -39,7 +39,19 @@ export const Product = styled.div`
 `;
 
 export const ProductTitle = styled.div`
+  display: flex;
+  align-items: center;
   padding-right: 8px;
   line-height: 24px;
   font-size: 16px;
+`;
+
+export const ProductAmount = styled.div`
+  margin-left: 8px;
+  padding: 0px 5.5px;
+  line-height: 18px;
+  font-size: 12px;
+  color: white;
+  background-color: #769902;
+  border-radius: 14px;
 `;
