@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const Container = styled.div`
+export const Section = styled.section`
   margin: 16px auto;
   padding: 16px 32px;
   max-width: 600px;
@@ -36,3 +36,22 @@ export const ItemDetail = styled.div`
 `;
 
 export const ItemAction = styled.div``;
+
+export const PurchaseDetail = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 16px 0;
+  padding: 16px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  font-size: 14px;
+`;
+
+export const Total = styled.div`
+  display: flex;
+  justify-content: space-between;
+  line-height: 24px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #ff5e7d;
+`;
