@@ -1,6 +1,7 @@
 import type { Cart } from "@/types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import localforage from "localforage";
+import { useEffect, useState } from "react";
 import {
   Navigate,
   RouterProvider,
@@ -15,6 +16,16 @@ const queryClient = new QueryClient();
 
 function App() {
   const [shoppingCart, setShoppingCart] = useState<Cart>([]);
+
+  useEffect(() => {
+    localforage.getItem<Cart>("shoppingCart").then((value) => {
+      if (value) setShoppingCart(value);
+    });
+  }, []);
+
+  useEffect(() => {
+    localforage.setItem<Cart>("shoppingCart", shoppingCart);
+  }, [shoppingCart]);
 
   const router = createBrowserRouter([
     {
