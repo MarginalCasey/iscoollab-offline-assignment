@@ -1,12 +1,10 @@
+import OrderDialog from "@/components/OrderDialog";
+import useOrderDialog from "@/components/OrderDialog/useOrderDialog";
 import fetchMenu from "@/providers/fetchMenu";
 import type { Menu } from "@/providers/fetchMenu/types";
-import type { Cart, Order } from "@/types";
+import type { Cart } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import isEqual from "lodash.isequal";
-import { create } from "mutative";
 import type { Dispatch, SetStateAction } from "react";
-import { useState } from "react";
-import OrderDialog from "./OrderDialog";
 import {
   Category,
   Container,
@@ -27,28 +25,12 @@ function Menu({ shoppingCart, setShoppingCart }: MenuProps) {
     queryFn: fetchMenu,
   });
 
-  const [selectedProductId, setSelectedProductId] = useState<number>();
-  const openOrderDialog = (productId: number) => () => {
-    setSelectedProductId(productId);
-  };
-  const closeOrderDialog = () => {
-    setSelectedProductId(undefined);
-  };
-  const handleSubmitOrderDialog = (order: Order) => {
-    setShoppingCart(
-      create(shoppingCart, (draft) => {
-        const indexOfIdenticalOrder = shoppingCart.findIndex(
-          (item) => item.id === order.id && isEqual(item.adjusts, order.adjusts)
-        );
-
-        if (indexOfIdenticalOrder === -1) {
-          draft.push(order);
-        } else {
-          draft[indexOfIdenticalOrder].amount += order.amount;
-        }
-      })
-    );
-  };
+  const {
+    selectedProductId,
+    openOrderDialog,
+    closeOrderDialog,
+    handleSubmitOrderDialog,
+  } = useOrderDialog(shoppingCart, setShoppingCart);
 
   if (isFetching) return null;
 
