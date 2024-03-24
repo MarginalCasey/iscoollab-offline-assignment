@@ -1,5 +1,6 @@
 export default {
   testEnvironment: "jsdom",
+  testMatch: ["**/*.test.{ts,tsx}"],
   transform: {
     "^.+\\.tsx?$": "ts-jest",
   },
@@ -10,5 +11,5 @@ export default {
   setupFiles: ["<rootDir>/setupJest.ts"],
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   coverageDirectory: "coverage",
-  collectCoverageFrom: ["src/**/*.{ts,tsx}"],
+  collectCoverageFrom: ["src/**/*.{ts,tsx}", "!src/**/__tests__/*.{ts,tsx}"],
 };
