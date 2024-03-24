@@ -7,8 +7,8 @@ function checkout(data: Cart): Promise<void> {
     setTimeout(() => {
       localforage
         .getItem<OrderHistoryRecord[]>("orderHistory")
-        .then((value) => {
-          localforage.setItem<OrderHistoryRecord[]>("orderHistory", [
+        .then(async (value) => {
+          await localforage.setItem<OrderHistoryRecord[]>("orderHistory", [
             ...(value ?? []),
             {
               orderId: uuidv4(),
@@ -17,8 +17,9 @@ function checkout(data: Cart): Promise<void> {
               totalPrice: data.reduce((acc, item) => acc + item.totalPrice, 0),
             },
           ]);
+
+          resolve();
         });
-      resolve();
     }, 2000);
   });
 }
