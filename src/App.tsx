@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import Layout from "./Layout";
+import History from "./pages/History";
 import Menu from "./pages/Menu";
 import ShoppingCart from "./pages/ShoppingCart";
 
@@ -56,7 +57,7 @@ function App() {
         },
         {
           path: "history",
-          element: <div>history</div>,
+          element: <History />,
         },
       ],
     },
