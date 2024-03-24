@@ -151,7 +151,7 @@ function OrderDialog({
   };
 
   return (
-    <Dialog maxWidth="xs" open onClose={onClose}>
+    <Dialog maxWidth="xs" open onClose={onClose} data-testid="order-dialog">
       <DialogTitle>
         <b>{product.name}</b>
       </DialogTitle>

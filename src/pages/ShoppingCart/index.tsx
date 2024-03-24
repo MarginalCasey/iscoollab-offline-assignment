@@ -126,7 +126,7 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
         </PurchaseDetail>
         <Total>
           <div>應付金額</div>
-          <div>${totalProductPrice}</div>
+          <div data-testid="total-product-price">${totalProductPrice}</div>
         </Total>
       </Section>
       <PurchaseButton
