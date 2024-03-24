@@ -13,13 +13,7 @@ interface JsonType<SchemaFields extends string> {
 interface fetchMenuResponse {
   category_list_json: JsonType<"product_id" | "sort" | "name" | "product_list">;
   product_list_json: JsonType<
-    | "product_id"
-    | "sort"
-    | "name"
-    | "price"
-    | "adjust_list"
-    | "option_list"
-    | "combine_list"
+    "product_id" | "sort" | "name" | "price" | "adjust_list" | "combine_list"
   >;
   combine_list_json: {
     common_schema: {
@@ -41,7 +35,7 @@ interface fetchMenuResponse {
   >;
 }
 
-function parseCategoryListData(
+export function parseCategoryListData(
   data: fetchMenuResponse["category_list_json"]
 ): Dictionary<Category> {
   const { schema, data: categoryData } = data;
@@ -66,7 +60,7 @@ function parseCategoryListData(
   );
 }
 
-function parseProductListData(
+export function parseProductListData(
   data: fetchMenuResponse["product_list_json"],
   combineData: fetchMenuResponse["combine_list_json"]
 ): Dictionary<Product> {
@@ -131,7 +125,7 @@ function parseProductListData(
   );
 }
 
-function parseAdjustListData(
+export function parseAdjustListData(
   data: fetchMenuResponse["adjust_list_json"]
 ): Dictionary<Adjust> {
   const { schema, data: adjustData } = data;
@@ -161,7 +155,7 @@ function parseAdjustListData(
   }, {});
 }
 
-function parseOptionListData(
+export function parseOptionListData(
   data: fetchMenuResponse["option_list_json"]
 ): Dictionary<Option> {
   const { schema, data: adjustData } = data;
