@@ -1,18 +1,22 @@
 import OrderDialog from "@/components/OrderDialog";
 import useOrderDialog from "@/components/OrderDialog/useOrderDialog";
+import checkout from "@/providers/checkout";
 import fetchMenu from "@/providers/fetchMenu";
 import type { Menu } from "@/providers/fetchMenu/types";
 import type { Cart } from "@/types";
 import Button from "@mui/material/Button";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { create } from "mutative";
 import type { Dispatch, SetStateAction } from "react";
+import { useNavigate } from "react-router-dom";
 import {
+  Container,
   Item,
   ItemAction,
   ItemDetail,
   ItemInfo,
   ItemName,
+  PurchaseButton,
   PurchaseDetail,
   Section,
   Title,
@@ -25,9 +29,17 @@ interface CartProps {
 }
 
 function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
+  const navigate = useNavigate();
   const { isFetching, data } = useQuery<Menu>({
     queryKey: ["menu"],
     queryFn: fetchMenu,
+  });
+  const checkoutMutation = useMutation({
+    mutationFn: checkout,
+    onSuccess: () => {
+      setShoppingCart([]);
+      navigate("/history");
+    },
   });
 
   const {
@@ -50,7 +62,7 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
     return acc + item.totalPrice;
   }, 0);
 
-  const handleDeleteCartItem = (index: number) => () => {
+  const deleteCartItem = (index: number) => () => {
     setShoppingCart(
       create(shoppingCart, (draft) => {
         draft.splice(index, 1);
@@ -58,9 +70,12 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
     );
   };
 
+  const submit = () => {
+    checkoutMutation.mutate(shoppingCart);
+  };
 
   return (
-    <>
+    <Container>
       <Section>
         <Title>購物內容</Title>
         {shoppingCart.map((item, index) => (
@@ -82,8 +97,18 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
               </ItemDetail>
             </ItemInfo>
             <ItemAction>
-              <Button onClick={openOrderDialog(item.id, index)}>編輯</Button>
-              <Button onClick={handleDeleteCartItem(index)}>刪除</Button>
+              <Button
+                onClick={openOrderDialog(item.id, index)}
+                disabled={checkoutMutation.isPending}
+              >
+                編輯
+              </Button>
+              <Button
+                onClick={deleteCartItem(index)}
+                disabled={checkoutMutation.isPending}
+              >
+                刪除
+              </Button>
             </ItemAction>
           </Item>
         ))}
@@ -99,6 +124,15 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
           <div>${totalProductPrice}</div>
         </Total>
       </Section>
+      <PurchaseButton
+        variant="contained"
+        size="large"
+        fullWidth
+        onClick={submit}
+        disabled={checkoutMutation.isPending}
+      >
+        完成付款並購買
+      </PurchaseButton>
       {selectedProductId && (
         <OrderDialog
           products={products}
@@ -110,7 +144,7 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
           onSubmit={submitOrderDialog}
         />
       )}
-    </>
+    </Container>
   );
 }
 

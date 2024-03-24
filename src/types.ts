@@ -20,3 +20,10 @@ export interface Order {
 }
 
 export type Cart = Order[];
+
+export interface OrderHistoryRecord {
+  orderId: string;
+  orderedAt: number;
+  orderProducts: Order[];
+  totalPrice: number;
+}

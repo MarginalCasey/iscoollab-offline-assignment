@@ -1,9 +1,15 @@
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
+import { Button } from "@mui/material";
+
+export const Container = styled.div`
+  margin: 0 auto;
+  max-width: 600px;
+`;
 
 export const Section = styled.section`
-  margin: 16px auto;
+  margin: 16px 0;
   padding: 16px 32px;
-  max-width: 600px;
   background-color: white;
 `;
 
@@ -54,4 +60,15 @@ export const Total = styled.div`
   font-weight: 700;
   font-size: 16px;
   color: #ff5e7d;
+`;
+
+export const PurchaseButton = styled(Button)`
+  display: block;
+  margin: 32px auto 0;
+  ${(props) =>
+    props.disabled &&
+    css`
+      pointer-events: unset !important;
+      cursor: progress !important;
+    `}
 `;
