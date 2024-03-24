@@ -42,6 +42,13 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
   if (isFetching) return null;
 
   const { products, adjusts, options } = data as Menu;
+  const totalProductAmount = shoppingCart.reduce(
+    (acc, item) => acc + item.amount,
+    0
+  );
+  const totalProductPrice = shoppingCart.reduce((acc, item) => {
+    return acc + item.totalPrice;
+  }, 0);
 
   const handleDeleteCartItem = (index: number) => () => {
     setShoppingCart(
@@ -51,13 +58,6 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
     );
   };
 
-  const totalProductAmount = shoppingCart.reduce(
-    (acc, item) => acc + item.amount,
-    0
-  );
-  const totalProductPrice = shoppingCart.reduce((acc, item) => {
-    return acc + item.total;
-  }, 0);
 
   return (
     <>
@@ -76,7 +76,7 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
                     const amount = option.amount;
                     return amount > 1 ? `${name}x${amount}` : name;
                   })
-                  .concat(`$${item.total}`)
+                  .concat(`$${item.totalPrice}`)
                   .concat(`${item.amount}份`)
                   .join(" / ")}
               </ItemDetail>

@@ -16,7 +16,7 @@ export interface Order {
       };
     };
   };
-  total: number;
+  totalPrice: number;
 }
 
 export type Cart = Order[];

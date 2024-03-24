@@ -69,7 +69,7 @@ function OrderDialog({
       id: productId,
       amount: 1,
       adjusts: {},
-      total: product.price,
+      totalPrice: product.price,
     }
   );
 
@@ -117,7 +117,7 @@ function OrderDialog({
         }
       });
 
-      const total =
+      const totalPrice =
         order.amount *
         Object.values(newAdjusts).reduce((sum, adjust) => {
           return (
@@ -131,7 +131,7 @@ function OrderDialog({
       setOrder({
         ...order,
         adjusts: newAdjusts,
-        total,
+        totalPrice,
       });
     };
   };
@@ -141,7 +141,7 @@ function OrderDialog({
     setOrder({
       ...order,
       amount: value,
-      total: (order.total / order.amount) * value,
+      totalPrice: (order.totalPrice / order.amount) * value,
     });
   };
 
@@ -189,7 +189,7 @@ function OrderDialog({
       </DialogContent>
       <DialogActions>
         <div>
-          <Label>總金額: {order.total}元</Label>
+          <Label>總金額: {order.totalPrice}元</Label>
           <TextField
             type="number"
             size="small"
