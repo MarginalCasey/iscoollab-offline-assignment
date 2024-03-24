@@ -36,7 +36,7 @@ function Menu({ shoppingCart, setShoppingCart }: MenuProps) {
 
   const { categories, products, adjusts, options } = data as Menu;
   return (
-    <Container>
+    <Container data-testid="menu">
       {Object.values(categories)
         .sort((a, b) => a.sort - b.sort)
         .map((category) => (
@@ -52,10 +52,18 @@ function Menu({ shoppingCart, setShoppingCart }: MenuProps) {
                 }, 0);
 
                 return (
-                  <Product key={productId} onClick={openOrderDialog(productId)}>
+                  <Product
+                    key={productId}
+                    onClick={openOrderDialog(productId)}
+                    data-testid={`product-${productId}`}
+                  >
                     <ProductTitle>
                       {product.name}
-                      {amount > 0 && <ProductAmount>{amount}</ProductAmount>}
+                      {amount > 0 && (
+                        <ProductAmount data-testid="product-amount">
+                          {amount}
+                        </ProductAmount>
+                      )}
                     </ProductTitle>
                     <div>{product.price}</div>
                     <div>{product.temperature.join(", ")}</div>
