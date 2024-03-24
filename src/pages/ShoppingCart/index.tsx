@@ -50,7 +50,12 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
     submitOrderDialog,
   } = useOrderDialog(shoppingCart, setShoppingCart);
 
-  if (shoppingCart.length === 0) return <Section>購物車內容為空</Section>;
+  if (shoppingCart.length === 0)
+    return (
+      <Container>
+        <Section>購物車內容為空</Section>
+      </Container>
+    );
   if (isFetching) return null;
 
   const { products, adjusts, options } = data as Menu;
