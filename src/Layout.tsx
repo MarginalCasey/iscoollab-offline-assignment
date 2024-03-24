@@ -42,7 +42,9 @@ function Layout({ shoppingCart }: LayoutProps) {
             </Button>
             <Button color="inherit" component={Link} to="cart">
               購物車
-              {cartItemAmount > 0 && <Amount>{cartItemAmount}</Amount>}
+              {cartItemAmount > 0 && (
+                <Amount data-testid="cart-item-amount">{cartItemAmount}</Amount>
+              )}
             </Button>
             <Button color="inherit" component={Link} to="history">
               訂單
