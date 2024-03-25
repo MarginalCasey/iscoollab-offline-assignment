@@ -2,7 +2,6 @@ import type { Cart } from "@/types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import localforage from "localforage";
 import { useEffect } from "react";
-import "./App.css";
 import { Navigate, RouterProvider, createHashRouter } from "react-router-dom";
 import Layout from "./components/Layout";
 import { useDispatch, useSelector } from "./hooks/redux";
