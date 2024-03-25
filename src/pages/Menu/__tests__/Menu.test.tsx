@@ -1,17 +1,9 @@
-import { renderWithRouter } from "@/__tests__/testUtils";
-import type { Cart } from "@/types";
+import { renderWithProviders } from "@/__tests__/testUtils";
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import fetchMock from "jest-fetch-mock";
-import { useState } from "react";
 import MenuJson from "../../../../public/menu.json";
 import Menu from "../index";
-
-const TestComponent = ({ value }: { value: Cart }) => {
-  const [shoppingCart, setShoppingCart] = useState(value);
-
-  return <Menu shoppingCart={shoppingCart} setShoppingCart={setShoppingCart} />;
-};
 
 describe("Menu", () => {
   beforeAll(() => {
@@ -23,12 +15,12 @@ describe("Menu", () => {
   });
 
   it("should render default", async () => {
-    renderWithRouter(<TestComponent value={[]} />);
+    renderWithProviders(<Menu />);
     await screen.findByTestId("menu");
   });
 
   it("should update menu if user add new order", async () => {
-    renderWithRouter(<TestComponent value={[]} />);
+    renderWithProviders(<Menu />);
     await screen.findByTestId("menu");
 
     const item = screen.getByTestId(`product-${1337702200}`);

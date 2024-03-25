@@ -1,6 +1,6 @@
 import App from "@/App";
 import { mockCartItem } from "@/__tests__/mocks";
-import { render } from "@/__tests__/testUtils";
+import { renderWithProviders } from "@/__tests__/testUtils";
 import * as checkout from "@/providers/checkout";
 import * as fetchOrderHistory from "@/providers/fetchOrderHistory";
 import { screen, within } from "@testing-library/react";
@@ -35,7 +35,7 @@ describe("Create order and checkout flow", () => {
   it("default", async () => {
     window.history.pushState({}, "home page", "/");
 
-    render(<App />);
+    renderWithProviders(<App />, { withRouter: false });
 
     /* menu page */
     expect(window.location.pathname).toBe("/menu");

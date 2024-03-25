@@ -1,23 +1,10 @@
 import { mockCartItem } from "@/__tests__/mocks";
-import { renderWithRouter } from "@/__tests__/testUtils";
-import type { Cart } from "@/types";
+import { renderWithProviders } from "@/__tests__/testUtils";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import fetchMock from "jest-fetch-mock";
-import { useState } from "react";
 import MenuJson from "../../../../public/menu.json";
 import ShoppingCart from "../index";
-
-const TestComponent = ({ value }: { value: Cart }) => {
-  const [shoppingCart, setShoppingCart] = useState(value);
-
-  return (
-    <ShoppingCart
-      shoppingCart={shoppingCart}
-      setShoppingCart={setShoppingCart}
-    />
-  );
-};
 
 describe("ShoppingCart", () => {
   beforeAll(() => {
@@ -29,12 +16,14 @@ describe("ShoppingCart", () => {
   });
 
   it("should render empty page", async () => {
-    renderWithRouter(<TestComponent value={[]} />);
+    renderWithProviders(<ShoppingCart />);
     expect(screen.getByText("購物車內容為空")).toBeInTheDocument();
   });
 
   it("should render default", async () => {
-    renderWithRouter(<TestComponent value={[mockCartItem]} />);
+    renderWithProviders(<ShoppingCart />, {
+      initialState: { shoppingCart: { value: [mockCartItem] } },
+    });
 
     await screen.findByText("購物內容");
     expect(screen.getByText("巨峰葡啵綠")).toBeInTheDocument();
@@ -43,7 +32,9 @@ describe("ShoppingCart", () => {
   });
 
   it("should update cart if user remove an item", async () => {
-    renderWithRouter(<TestComponent value={[mockCartItem]} />);
+    renderWithProviders(<ShoppingCart />, {
+      initialState: { shoppingCart: { value: [mockCartItem] } },
+    });
 
     await screen.findByText("購物內容");
     expect(screen.getByText("巨峰葡啵綠")).toBeInTheDocument();
@@ -54,7 +45,9 @@ describe("ShoppingCart", () => {
   });
 
   it("should update cart if user update an item", async () => {
-    renderWithRouter(<TestComponent value={[mockCartItem]} />);
+    renderWithProviders(<ShoppingCart />, {
+      initialState: { shoppingCart: { value: [mockCartItem] } },
+    });
 
     await screen.findByText("購物內容");
     expect(screen.getByText("巨峰葡啵綠")).toBeInTheDocument();

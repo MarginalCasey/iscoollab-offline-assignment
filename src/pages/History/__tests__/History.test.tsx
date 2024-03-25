@@ -1,5 +1,5 @@
 import { mockCartItem } from "@/__tests__/mocks";
-import { renderWithRouter } from "@/__tests__/testUtils";
+import { renderWithProviders } from "@/__tests__/testUtils";
 import * as clearOrderHistory from "@/providers/clearOrderHistory";
 import * as fetchOrderHistory from "@/providers/fetchOrderHistory";
 import { screen } from "@testing-library/react";
@@ -37,14 +37,14 @@ describe("History", () => {
 
   it("should render empty page", async () => {
     fetchOrderHistorySpy.mockResolvedValueOnce([]);
-    renderWithRouter(<History />);
+    renderWithProviders(<History />);
 
     await screen.findByText("訂單紀錄為空");
   });
 
   it("should render default", async () => {
     fetchOrderHistorySpy.mockResolvedValueOnce(mockOrderHistory);
-    renderWithRouter(<History />);
+    renderWithProviders(<History />);
 
     await screen.findByText("過往訂單");
     expect(
@@ -58,7 +58,7 @@ describe("History", () => {
 
   it("should update if user clear all histories", async () => {
     fetchOrderHistorySpy.mockResolvedValueOnce(mockOrderHistory);
-    renderWithRouter(<History />);
+    renderWithProviders(<History />);
 
     await screen.findByText("過往訂單");
     expect(
