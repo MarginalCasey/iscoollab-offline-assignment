@@ -2,12 +2,8 @@ import type { Cart } from "@/types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import localforage from "localforage";
 import { useEffect } from "react";
-import {
-  Navigate,
-  RouterProvider,
-  createBrowserRouter,
-} from "react-router-dom";
 import "./App.css";
+import { Navigate, RouterProvider, createHashRouter } from "react-router-dom";
 import Layout from "./components/Layout";
 import { useDispatch, useSelector } from "./hooks/redux";
 import History from "./pages/History";
@@ -33,7 +29,7 @@ function App() {
     localforage.setItem<Cart>("shoppingCart", shoppingCart);
   }, [shoppingCart]);
 
-  const router = createBrowserRouter([
+  const router = createHashRouter([
     {
       path: "/",
       element: <Navigate to="/menu" replace />,

@@ -180,7 +180,7 @@ export function parseOptionListData(
 }
 
 function fetchMenu(): Promise<Menu> {
-  return fetch("/menu.json")
+  return fetch("menu.json")
     .then<fetchMenuResponse>((response) => response.json())
     .then<Menu>((data) => ({
       categories: parseCategoryListData(data.category_list_json),
