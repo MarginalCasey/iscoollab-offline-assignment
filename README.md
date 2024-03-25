@@ -4,7 +4,7 @@ This is the project dedicated to IsCoolLab's first round offline assignment.
 
 ## Prerequisite
 
-[Node.js](https://nodejs.org/en/) version 18+
+[Node.js](https://nodejs.org/en/) version `^18.18.0 || >=20.0.0`
 
 ## Building and Running the Application
 
