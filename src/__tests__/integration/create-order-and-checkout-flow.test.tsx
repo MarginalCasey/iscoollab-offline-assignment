@@ -1,8 +1,9 @@
 import App from "@/App";
 import { mockCartItem } from "@/__tests__/mocks";
+import { render } from "@/__tests__/testUtils";
 import * as checkout from "@/providers/checkout";
 import * as fetchOrderHistory from "@/providers/fetchOrderHistory";
-import { render, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import fetchMock from "jest-fetch-mock";
 import MenuJson from "../../../public/menu.json";
