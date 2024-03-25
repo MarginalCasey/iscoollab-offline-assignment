@@ -1,10 +1,10 @@
 import OrderDialog from "@/components/OrderDialog";
 import useOrderDialog from "@/components/OrderDialog/useOrderDialog";
+import { useSelector } from "@/hooks/redux";
 import fetchMenu from "@/providers/fetchMenu";
 import type { Menu } from "@/providers/fetchMenu/types";
-import type { Cart } from "@/types";
+import { selectShoppingCart } from "@/stores/shoppingCartSlice";
 import { useQuery } from "@tanstack/react-query";
-import type { Dispatch, SetStateAction } from "react";
 import {
   Category,
   Container,
@@ -14,12 +14,9 @@ import {
   Title,
 } from "./index.style";
 
-interface MenuProps {
-  shoppingCart: Cart;
-  setShoppingCart: Dispatch<SetStateAction<Cart>>;
-}
+function Menu() {
+  const shoppingCart = useSelector(selectShoppingCart);
 
-function Menu({ shoppingCart, setShoppingCart }: MenuProps) {
   const { isFetching, data } = useQuery<Menu>({
     queryKey: ["menu"],
     queryFn: fetchMenu,
@@ -30,7 +27,7 @@ function Menu({ shoppingCart, setShoppingCart }: MenuProps) {
     openOrderDialog,
     closeOrderDialog,
     submitOrderDialog,
-  } = useOrderDialog(shoppingCart, setShoppingCart);
+  } = useOrderDialog(shoppingCart);
 
   if (isFetching) return null;
 

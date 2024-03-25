@@ -1,13 +1,16 @@
 import OrderDialog from "@/components/OrderDialog";
 import useOrderDialog from "@/components/OrderDialog/useOrderDialog";
+import { useDispatch, useSelector } from "@/hooks/redux";
 import checkout from "@/providers/checkout";
 import fetchMenu from "@/providers/fetchMenu";
 import type { Menu } from "@/providers/fetchMenu/types";
-import type { Cart } from "@/types";
+import {
+  clear,
+  removeItem,
+  selectShoppingCart,
+} from "@/stores/shoppingCartSlice";
 import Button from "@mui/material/Button";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { create } from "mutative";
-import type { Dispatch, SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -23,12 +26,10 @@ import {
   Total,
 } from "./index.style";
 
-interface CartProps {
-  shoppingCart: Cart;
-  setShoppingCart: Dispatch<SetStateAction<Cart>>;
-}
+function ShoppingCart() {
+  const dispatch = useDispatch();
+  const shoppingCart = useSelector(selectShoppingCart);
 
-function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
   const navigate = useNavigate();
   const { isFetching, data } = useQuery<Menu>({
     queryKey: ["menu"],
@@ -37,7 +38,7 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
   const checkoutMutation = useMutation({
     mutationFn: checkout,
     onSuccess: () => {
-      setShoppingCart([]);
+      dispatch(clear());
       navigate("/history");
     },
   });
@@ -48,7 +49,7 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
     openOrderDialog,
     closeOrderDialog,
     submitOrderDialog,
-  } = useOrderDialog(shoppingCart, setShoppingCart);
+  } = useOrderDialog(shoppingCart);
 
   if (shoppingCart.length === 0)
     return (
@@ -68,11 +69,7 @@ function ShoppingCart({ shoppingCart, setShoppingCart }: CartProps) {
   }, 0);
 
   const deleteCartItem = (index: number) => () => {
-    setShoppingCart(
-      create(shoppingCart, (draft) => {
-        draft.splice(index, 1);
-      })
-    );
+    dispatch(removeItem(index));
   };
 
   const submit = () => {

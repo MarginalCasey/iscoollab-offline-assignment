@@ -1,13 +1,11 @@
+import { useDispatch } from "@/hooks/redux";
+import { addItem, updateItem } from "@/stores/shoppingCartSlice";
 import type { Cart, Order } from "@/types";
-import isEqual from "lodash.isequal";
-import { create } from "mutative";
-import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 
-function useOrderDialog(
-  shoppingCart: Cart,
-  setShoppingCart: Dispatch<SetStateAction<Cart>>
-) {
+function useOrderDialog(shoppingCart: Cart) {
+  const dispatch = useDispatch();
+
   const [selectedProductId, setSelectedProductId] = useState<number>();
   const [selectedCartItemIndex, setSelectedCartItemIndex] = useState<number>();
   const editMode = selectedCartItemIndex !== undefined;
@@ -21,24 +19,16 @@ function useOrderDialog(
     setSelectedCartItemIndex(undefined);
   };
   const submitOrderDialog = (order: Order) => {
-    setShoppingCart(
-      create(shoppingCart, (draft) => {
-        if (editMode) {
-          draft[selectedCartItemIndex] = order;
-        } else {
-          const indexOfIdenticalOrder = shoppingCart.findIndex(
-            (item) =>
-              item.id === order.id && isEqual(item.adjusts, order.adjusts)
-          );
-
-          if (indexOfIdenticalOrder === -1) {
-            draft.push(order);
-          } else {
-            draft[indexOfIdenticalOrder].amount += order.amount;
-          }
-        }
-      })
-    );
+    if (editMode) {
+      dispatch(
+        updateItem({
+          index: selectedCartItemIndex,
+          item: order,
+        })
+      );
+    } else {
+      dispatch(addItem(order));
+    }
   };
 
   return {
