@@ -33,7 +33,7 @@ function Menu() {
 
   const { categories, products, adjusts, options } = data as Menu;
   return (
-    <Container data-testid="menu">
+    <Container data-testid="menu-page">
       {Object.values(categories)
         .sort((a, b) => a.sort - b.sort)
         .map((category) => (

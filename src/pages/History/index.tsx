@@ -51,7 +51,7 @@ function History() {
   };
 
   return (
-    <Container>
+    <Container data-testid="history-page">
       <Title>過往訂單</Title>
       {orderHistory.map((record) => {
         const orderedAt = new Date(record.orderedAt);

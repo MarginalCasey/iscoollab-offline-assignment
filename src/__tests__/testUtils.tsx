@@ -5,7 +5,7 @@ import { render as defaultRender } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +31,7 @@ export const renderWithProviders = (
       return (
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>
-            <BrowserRouter>{children}</BrowserRouter>
+            <HashRouter>{children}</HashRouter>
           </QueryClientProvider>
         </Provider>
       );

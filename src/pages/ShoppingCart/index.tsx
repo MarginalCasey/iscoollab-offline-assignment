@@ -77,7 +77,7 @@ function ShoppingCart() {
   };
 
   return (
-    <Container>
+    <Container data-testid="shopping-cart-page">
       <Section>
         <Title>購物內容</Title>
         {shoppingCart.map((item, index) => (

@@ -16,12 +16,12 @@ describe("Menu", () => {
 
   it("should render default", async () => {
     renderWithProviders(<Menu />);
-    await screen.findByTestId("menu");
+    await screen.findByTestId("menu-page");
   });
 
   it("should update menu if user add new order", async () => {
     renderWithProviders(<Menu />);
-    await screen.findByTestId("menu");
+    await screen.findByTestId("menu-page");
 
     const item = screen.getByTestId(`product-${1337702200}`);
     await userEvent.click(item);

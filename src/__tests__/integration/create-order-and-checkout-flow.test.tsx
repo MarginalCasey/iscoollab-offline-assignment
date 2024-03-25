@@ -38,8 +38,7 @@ describe("Create order and checkout flow", () => {
     renderWithProviders(<App />, { withRouter: false });
 
     /* menu page */
-    expect(window.location.pathname).toBe("/menu");
-    await screen.findByTestId("menu");
+    await screen.findByTestId("menu-page");
 
     const item = screen.getByTestId(`product-${1337702200}`);
     await userEvent.click(item);
@@ -57,7 +56,8 @@ describe("Create order and checkout flow", () => {
     await userEvent.click(screen.getByRole("link", { name: "購物車 1" }));
 
     /* cart page */
-    expect(window.location.pathname).toBe("/cart");
+    await screen.findByTestId("shopping-cart-page");
+
     expect(screen.getByText("巨峰葡啵綠")).toBeInTheDocument();
     expect(screen.getByText("L / 去冰 / 無糖 / $75 / 1份")).toBeInTheDocument();
     expect(screen.getByText("商品 * 1")).toBeInTheDocument();
@@ -68,7 +68,8 @@ describe("Create order and checkout flow", () => {
     );
 
     /* history page */
-    expect(window.location.pathname).toBe("/history");
+    await screen.findByTestId("history-page");
+
     await screen.findByText("過往訂單");
     expect(
       screen.getByText(`購買於 ${new Date(orderedAt).toLocaleString()}`)
